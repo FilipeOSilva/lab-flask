@@ -1,4 +1,4 @@
 instances/
 poetry.lock
-lab_flask/__pycache__/
-lab_flask/*/__pycache__/
+*/__pycache__/
+*/*/__pycache__/
