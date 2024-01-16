@@ -7,7 +7,7 @@ class DeviceModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     type = db.Column(db.String(16))
     name = db.Column(db.String(32))
-    enabled = db.Column(db.Integer)
+    enabled = db.Column(db.Boolean)
     state = db.Column(db.Integer)
 
 
@@ -36,7 +36,6 @@ class DeviceModel(db.Model):
 
         return None
 
-    
     def save_device(self):
         db.session.add(self)
         db.session.commit()
@@ -51,3 +50,8 @@ class DeviceModel(db.Model):
             json_devices.append(device.json())
 
         return json_devices
+
+    def update_device(self, name=None, type=None, enabled=None):
+        self.type = type if type != None else self.type
+        self.name = name if name != None else self.name
+        self.enabled = enabled if enabled != None else self.enabled
