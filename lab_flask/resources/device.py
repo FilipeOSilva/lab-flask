@@ -22,7 +22,7 @@ class Devices(Resource):
             device = DeviceModel(**values)
             device.save_device()
         
-            return device.json()
+            return device.json(), 201
         except:
             return {'message': 'Erro to add new device'}, 500
 
@@ -45,7 +45,7 @@ class Device(Resource):
                 device.update_device(**values)
                 device.save_device()
                 
-                return device.json(), 200
+                return device.json(), 201
 
             return {'message': 'Device was not found'}, 400
 
