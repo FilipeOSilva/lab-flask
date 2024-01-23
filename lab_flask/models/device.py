@@ -1,6 +1,5 @@
 from sql_alchemy import db
 
-
 class DeviceModel(db.Model):
 
     __tablename__ = 'devices'
@@ -15,7 +14,7 @@ class DeviceModel(db.Model):
         self.id = id
         self.type = type
         self.name = name
-        self.enabled = enabled
+        self.enabled = bool(enabled)
         self.state = state 
 
     def json(self):
