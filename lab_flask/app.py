@@ -1,23 +1,38 @@
 from flask import Flask
 from flask_restful import Api
 from resources.device import Devices, Device
-from resources.user import User, Users
+from resources.user import User, Users, UserLogin
+from flask_jwt_extended import JWTManager
 import secrety
+from blocklist import BLOCKLIST
 
 app = Flask(__name__)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = secrety.PATH_DB
+app.config['JWT_SECRET_KEY'] = secrety.JWT_SECRET_KEY
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JWT_BLOCKLIST_ENABLED'] = True
+
 api = Api(app)
+jwt = JWTManager(app)
 
 @app.before_request
 def create_db():
     db.create_all()
 
+@jwt.token_in_blocklist_loader
+def check_blocklist(self, token):
+    return token['jti'] in BLOCKLIST
+
+@jwt.revoked_token_loader
+def invalid_token(jwt_header, jwt_data):
+    return {'message':'Invalid token'}, 401
+
 api.add_resource(Devices, '/devices/')
 api.add_resource(Device, '/devices/<int:device_id>')
 api.add_resource(Users, '/users/')
 api.add_resource(User, '/users/<int:user_id>')
-# api.add_resource(Login, '/login')
+api.add_resource(UserLogin, '/login')
 
 if __name__ == '__main__':
     from sql_alchemy import db
