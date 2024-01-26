@@ -1,5 +1,6 @@
-from flask_restful import Resource, reqparse, request
+from flask_restful import Resource, reqparse
 from models.device import DeviceModel
+from flask_jwt_extended import jwt_required
 
 def get_obj_dev_info(type_req=False, name_req=False):
         arg_recv = reqparse.RequestParser()
@@ -12,10 +13,12 @@ def get_obj_dev_info(type_req=False, name_req=False):
         return arg_recv.parse_args()
 
 class Devices(Resource):
+    @jwt_required()
     def get(self):
         devices = DeviceModel()
         return devices.read_all(), 200
 
+    @jwt_required()
     def post(self):        
         values = get_obj_dev_info(True, True)
         try:
@@ -27,7 +30,7 @@ class Devices(Resource):
             return {'message': 'Erro to add new device'}, 500
 
 class Device(Resource):
-
+    @jwt_required()
     def get(self, device_id):
         device = DeviceModel().find_device_by_id(device_id)
 
@@ -36,6 +39,7 @@ class Device(Resource):
         
         return {'message': 'Device was not found'}, 400
 
+    @jwt_required()
     def put(self, device_id):
         try:
             device = DeviceModel().find_device_by_id(device_id)
