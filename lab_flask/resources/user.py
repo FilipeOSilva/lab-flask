@@ -65,8 +65,6 @@ class UserLogin(Resource):
         data = values_args.parse_args()
 
         user = UserModel.find_user_by_login(data['login'])
-        print(user.passw.encode('utf-8'))
-        print(data['passw'].encode('utf-8'))
         try:
             if user and user.passw.encode('utf-8') == data['passw'].encode('utf-8'):
                 token = create_access_token(identity=user.id)
