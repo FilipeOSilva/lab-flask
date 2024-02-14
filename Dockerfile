@@ -21,4 +21,3 @@ COPY . .
 RUN poetry install --without dev
 
 ENTRYPOINT ["poetry", "run", "python", "lab_flask/app.py"]
-# CMD ["python3", "lab_flask/app.py"]
