@@ -63,11 +63,8 @@ class UserLogin(Resource):
         values_args.add_argument('login', type=str, required=True, help='The field \'login\' cannot be left blank.')
         values_args.add_argument('passw', type=str, required=True, help='The field \'passw\' cannot be left blank.')
         data = values_args.parse_args()
-
-        user = UserModel.find_user_by_login(data['login'])
-        print(user.passw.encode('utf-8'))
-        print(data['passw'].encode('utf-8'))
         try:
+            user = UserModel.find_user_by_login(data['login'])
             if user and user.passw.encode('utf-8') == data['passw'].encode('utf-8'):
                 token = create_access_token(identity=user.id)
 

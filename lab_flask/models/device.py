@@ -36,8 +36,14 @@ class DeviceModel(db.Model):
         return None
 
     def save_device(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
+        finally:
+            db.session.close()
 
     @classmethod
     def read_all(cls):

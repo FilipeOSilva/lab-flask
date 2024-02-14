@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  lab-python:
+    build: 
+      context: .
+    ports:
+    - 5000:5000
+    volumes:
+    - lab-python-vol:/app/instance
+
+volumes:
+  lab-python-vol:

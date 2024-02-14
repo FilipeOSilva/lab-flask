@@ -5,6 +5,7 @@ from resources.user import User, Users, UserLogin
 from flask_jwt_extended import JWTManager
 import secrety
 from blocklist import BLOCKLIST
+from models.user import UserModel
 
 app = Flask(__name__)
 
@@ -16,9 +17,23 @@ app.config['JWT_BLOCKLIST_ENABLED'] = True
 api = Api(app)
 jwt = JWTManager(app)
 
+""" 
+   TODO: In the future, change the way the database is started
+"""
 @app.before_request
 def create_db():
-    db.create_all()
+    try:
+        db.create_all()
+        first_user = {
+            'name': 'admin',
+            'enabled': True,
+            'login': 'admin',
+            'passw': 'admin'
+            }
+        user = UserModel(**first_user)
+        user.save_user()
+    except:
+        print("exists ADMIN!")
 
 @jwt.token_in_blocklist_loader
 def check_blocklist(self, token):
