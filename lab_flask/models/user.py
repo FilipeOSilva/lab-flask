@@ -42,8 +42,14 @@ class UserModel(db.Model):
         return None
 
     def save_user(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
+        finally:
+            db.session.close()
 
     @classmethod
     def read_all(cls):
@@ -61,5 +67,11 @@ class UserModel(db.Model):
         self.enabled = enabled if enabled != None else self.enabled
 
     def delete_user(self):
-        db.session.delete(self)
-        db.session.commit()
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
+        finally:
+            db.session.close()
