@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from models.device import DeviceModel
+from models.repository.devices import DevicesModel
 from flask_jwt_extended import jwt_required
 
 def get_obj_dev_info(type_req=False, name_req=False):
@@ -13,45 +13,47 @@ def get_obj_dev_info(type_req=False, name_req=False):
         return arg_recv.parse_args()
 
 class Devices(Resource):
-    @jwt_required()
+    # @jwt_required()
     def get(self):
-        devices = DeviceModel()
-        return devices.read_all(), 200
+        devices = DevicesModel()
+        print(type(devices.select()))
+        print(devices.select())
+        return 200
 
-    @jwt_required()
-    def post(self):        
-        values = get_obj_dev_info(True, True)
-        try:
-            device = DeviceModel(**values)
-            device.save_device()
+#     @jwt_required()
+#     def post(self):        
+#         values = get_obj_dev_info(True, True)
+#         try:
+#             device = DeviceModel(**values)
+#             device.save_device()
         
-            return device.json(), 201
-        except:
-            return {'message': 'Erro to add new device'}, 500
+#             return device.json(), 201
+#         except:
+#             return {'message': 'Erro to add new device'}, 500
 
-class Device(Resource):
-    @jwt_required()
-    def get(self, device_id):
-        device = DeviceModel().find_device_by_id(device_id)
+# class Device(Resource):
+#     @jwt_required()
+#     def get(self, device_id):
+#         device = DeviceModel().find_device_by_id(device_id)
 
-        if device:
-            return device.json(), 200
+#         if device:
+#             return device.json(), 200
         
-        return {'message': 'Device was not found'}, 400
+#         return {'message': 'Device was not found'}, 400
 
-    @jwt_required()
-    def put(self, device_id):
-        try:
-            device = DeviceModel().find_device_by_id(device_id)
+#     @jwt_required()
+#     def put(self, device_id):
+#         try:
+#             device = DeviceModel().find_device_by_id(device_id)
 
-            if device:
-                values = get_obj_dev_info()
-                device.update_device(**values)
-                device.save_device()
+#             if device:
+#                 values = get_obj_dev_info()
+#                 device.update_device(**values)
+#                 device.save_device()
                 
-                return device.json(), 201
+#                 return device.json(), 201
 
-            return {'message': 'Device was not found'}, 400
+#             return {'message': 'Device was not found'}, 400
 
-        except:
-            return {f'message': 'Erro to edit device {device_id}'}, 500
+#         except:
+#             return {f'message': 'Erro to edit device {device_id}'}, 500
